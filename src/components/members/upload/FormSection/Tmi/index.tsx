@@ -1,17 +1,18 @@
 import { css } from '@emotion/react';
 import styled from '@emotion/styled';
 import { colors } from '@sopt-makers/colors';
+import { TextArea, TextField } from '@sopt-makers/ui';
 import { Controller, useFormContext } from 'react-hook-form';
 
+import BottomSheetSelect from '@/components/coffeechat/upload/CoffeechatForm/BottomSheetSelect';
 import Input from '@/components/common/Input';
 import Responsive from '@/components/common/Responsive';
-import TextArea from '@/components/common/TextArea';
-import Select from '@/components/members/common/select/Select';
 import { SOJU_CAPACITY_RANGE } from '@/components/members/upload/constants';
 import MemberCountableTextArea from '@/components/members/upload/forms/CountableTextArea';
 import MemberFormHeader from '@/components/members/upload/forms/FormHeader';
 import MemberFormItem from '@/components/members/upload/forms/FormItem';
 import { MemberFormSection } from '@/components/members/upload/forms/FormSection';
+import Select from '@/components/members/upload/forms/Select';
 import FavorToggle from '@/components/members/upload/FormSection/Tmi/FavorToggle';
 import MbtiSelector from '@/components/members/upload/FormSection/Tmi/MbtiSelector';
 import {
@@ -61,29 +62,50 @@ export default function TmiFormSection() {
               />
             )}
           />
-          <StyledTextArea {...register('mbtiDescription')} placeholder='ex) 저는 극강의 EEE에요.' />
+          <StyledTextArea {...register('mbtiDescription')} placeholder='ex) 저는 극강의 EEE에요.' fixedHeight={100} />
         </MbtiWrapper>
       </StyledMemberFormItem>
 
       <StyledMemberFormItem title='소주, 어디까지 마셔봤니?'>
-        <Controller
-          control={control}
-          name='sojuCapacity'
-          render={({ field }) => (
-            <StyledSelect placeholder='주량 선택' value={field.value} onChange={field.onChange}>
-              <Select.Item value=''>선택 안 함</Select.Item>
-              {SOJU_CAPACITY_RANGE.map((capacity) => (
-                <Select.Item key={capacity} value={capacity}>
-                  {capacity}
-                </Select.Item>
-              ))}
-            </StyledSelect>
-          )}
-        />
+        <SojuCapacityWrapper>
+          <Controller
+            control={control}
+            name='sojuCapacity'
+            render={({ field }) => (
+              <>
+                <Responsive only='desktop'>
+                  <Select
+                    placeholder='주량 선택'
+                    options={SOJU_CAPACITY_RANGE}
+                    onChange={field.onChange}
+                    value={SOJU_CAPACITY_RANGE.find((option) => option.value === field.value)}
+                  />
+                </Responsive>
+                <Responsive only='mobile'>
+                  <BottomSheetSelect
+                    value={field.value}
+                    placeholder='주량 선택'
+                    options={SOJU_CAPACITY_RANGE}
+                    onChange={field.onChange}
+                  />
+                </Responsive>
+              </>
+            )}
+          />
+        </SojuCapacityWrapper>
       </StyledMemberFormItem>
 
       <StyledMemberFormItem title='저는 요새 이런 걸 좋아해요!'>
-        <StyledInput {...register('interest')} placeholder='ex) 요즘 넷플릭스 ‘더 글로리’에 빠졌어요.' />
+        <Responsive only='desktop' asChild>
+          <StyledTextField {...register('interest')} placeholder='ex) 요즘 넷플릭스 ‘더 글로리’에 빠졌어요.' />
+        </Responsive>
+        <Responsive only='mobile'>
+          <StyledTextArea
+            {...register('interest')}
+            placeholder='ex) 요즘 넷플릭스 ‘더 글로리’에 빠졌어요.'
+            fixedHeight={100}
+          />
+        </Responsive>
       </StyledMemberFormItem>
       <StyledMemberFormItem title='나는 어느 쪽?'>
         <FavorWrapper>
@@ -147,12 +169,12 @@ export default function TmiFormSection() {
           name='longIntroduction'
           control={control}
           render={({ field }) => (
-            <StyledIntroductionTextarea
-              value={field.value}
+            <StyledTextArea
+              value={field.value || ''}
               onChange={field.onChange}
-              maxCount={300}
-              placeholder={`• 나는 이런 사람이에요.\n• SOPT에 들어온 계기\n• SOPT에 들어오기 전에 무엇을 해왔는지\n• 프로젝트할 때의 나의 성향\n• SOPT에서 하고 싶은 것 등등`}
-              containerStyle={introductionTextareaContainerStyle}
+              maxLength={300}
+              fixedHeight={172}
+              placeholder={`- 나는 이런 사람이에요.\n- SOPT에 들어온 계기\n- SOPT에 들어오기 전에 무엇을 해왔는지\n- 프로젝트할 때의 나의 성향\n- SOPT에서 하고 싶은 것 등등`}
             />
           )}
         />
@@ -164,8 +186,16 @@ export default function TmiFormSection() {
 const MbtiWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-top: 20px;
+  margin-top: 12px;
+
+  @media ${MOBILE_MEDIA_QUERY} {
+    margin-top: 14px;
+  }
+`;
+
+const SojuCapacityWrapper = styled.div`
+  margin-top: 12px;
+  width: max-content;
 `;
 
 const StyledMemberFormItem = styled(MemberFormItem)`
@@ -174,15 +204,10 @@ const StyledMemberFormItem = styled(MemberFormItem)`
 
 const StyledTextArea = styled(TextArea)`
   margin-top: 14px;
-  border-radius: 13px;
-  padding: 14px 20px;
   width: 632px;
-  height: 76px;
 
   @media ${MOBILE_MEDIA_QUERY} {
     width: 100%;
-    height: 80px;
-    line-height: 150%;
   }
 `;
 
@@ -195,20 +220,12 @@ const FavorWrapper = styled.div`
   width: 593px;
 
   @media ${MOBILE_MEDIA_QUERY} {
+    row-gap: 11px;
     width: 100%;
   }
 `;
 
-const StyledSelect = styled(Select)`
-  margin-top: 14px;
-  width: 130px;
-
-  @media ${MOBILE_MEDIA_QUERY} {
-    background-color: ${colors.gray800};
-  }
-`;
-
-const StyledInput = styled(Input)`
+const StyledTextField = styled(TextField)`
   margin-top: 14px;
   width: 632px;
 

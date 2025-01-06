@@ -28,12 +28,12 @@ export default function MonthPicker({ onChange, value, placeholder }: MonthPicke
 const StyledDatePicker = styled(DatePicker)`
   box-sizing: border-box;
   transition: all 0.2s;
-  border: 1.5px solid ${colors.gray700};
+  border: 1.5px solid ${colors.gray800};
   border-radius: 6px;
-  background-color: ${colors.gray700};
-  padding: 14px 20px;
+  background-color: ${colors.gray800};
+  padding: 11px 16px;
   width: 100%;
-  color: ${colors.gray10};
+  color: ${colors.gray300};
   ${textStyles.SUIT_16_M};
 
   &::placeholder {

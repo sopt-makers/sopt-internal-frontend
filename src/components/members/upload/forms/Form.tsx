@@ -37,7 +37,7 @@ const StyledContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 257px;
+  padding-bottom: 283px;
 
   & > * {
     width: 790px;
@@ -47,7 +47,7 @@ const StyledContainer = styled.div`
   }
 
   @media ${MOBILE_MEDIA_QUERY} {
-    padding-bottom: 222px;
+    padding-bottom: 194px;
   }
 `;
 
@@ -56,11 +56,10 @@ const StyledHeader = styled.header`
 
   .title {
     color: #fcfcfc;
-    font-size: 36px;
+    font-size: 40px;
     font-weight: 700;
 
     @media ${MOBILE_MEDIA_QUERY} {
-      margin-top: 36px;
       margin-left: 24px;
       font-size: 24px;
     }
@@ -68,8 +67,8 @@ const StyledHeader = styled.header`
 
   .description {
     margin-top: 16px;
-    color: ${colors.gray600};
-    font-size: 16px;
+    color: ${colors.gray400};
+    font-size: 18px;
     font-weight: 500;
 
     @media ${MOBILE_MEDIA_QUERY} {
@@ -91,8 +90,8 @@ const StyledForm = styled.div`
   margin-top: 50px;
 
   @media ${MOBILE_MEDIA_QUERY} {
-    gap: 70px;
-    margin-top: 52px;
+    gap: 64px;
+    margin-top: 36px;
     padding: 0 20px 48px;
   }
 `;
@@ -103,7 +102,7 @@ const SubmitButton = styled.button<{ isDisabled: boolean }>`
   align-self: flex-end;
   justify-content: center;
   transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
-  margin-top: 30px;
+  margin-top: 26px;
   border-radius: 31px;
   background-color: ${colors.white};
   width: 163px;
@@ -128,6 +127,7 @@ const SubmitButton = styled.button<{ isDisabled: boolean }>`
   ${textStyles.SUIT_14_M}
 
   @media ${MOBILE_MEDIA_QUERY} {
+    margin-top: 0;
     border-radius: 12px;
     width: 100%;
     height: 52px;

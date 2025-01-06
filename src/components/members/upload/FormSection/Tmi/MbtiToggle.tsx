@@ -22,6 +22,7 @@ export default function MbtiToggle<T extends string | null>({ left, right, selec
       <LeftButton onClick={() => handleClick(left)} isSelected={left === selected}>
         {left}
       </LeftButton>
+      {!selected && <Bar />}
       <RightButton onClick={() => handleClick(right)} isSelected={right === selected}>
         {right}
       </RightButton>
@@ -31,18 +32,19 @@ export default function MbtiToggle<T extends string | null>({ left, right, selec
 
 const Container = styled.div`
   display: flex;
+  position: relative;
 
   @media ${MOBILE_MEDIA_QUERY} {
-    width: 48%;
+    width: 49%;
   }
 `;
 
 const Button = styled.button<{ isSelected: boolean }>`
-  background-color: ${({ isSelected }) => (isSelected ? colors.gray10 : colors.gray700)};
+  background-color: ${({ isSelected }) => (isSelected ? colors.gray10 : colors.gray800)};
   cursor: pointer;
   padding: 14px 0;
   width: 76px;
-  color: ${({ isSelected }) => (isSelected ? colors.gray950 : colors.gray10)};
+  color: ${({ isSelected }) => (isSelected ? colors.gray950 : colors.gray300)};
 
   ${textStyles.SUIT_16_SB}
 
@@ -69,4 +71,13 @@ const LeftButton = styled(Button)`
 const RightButton = styled(Button)`
   border-top-right-radius: 13px;
   border-bottom-right-radius: 13px;
+`;
+
+const Bar = styled.div`
+  position: absolute;
+  top: 25%;
+  left: 50%;
+  border-left: 1px solid ${colors.gray600};
+  height: 24px;
+  color: ${colors.gray600};
 `;

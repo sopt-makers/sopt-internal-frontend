@@ -28,7 +28,7 @@ export interface MemberUploadForm {
     fishBread: FavorFishBread | null;
     tteokbokki: FavorTteokbokki | null;
   };
-  sojuCapacity: (typeof SOJU_CAPACITY_RANGE)[number];
+  sojuCapacity: (typeof SOJU_CAPACITY_RANGE)[number]['value'];
   interest: string;
   longIntroduction: string;
   isPhoneBlind: boolean;

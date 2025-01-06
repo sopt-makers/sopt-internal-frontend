@@ -10,7 +10,7 @@ export const formatBirthday = (birthday: Birthday) => {
   return parsedBirthDay.isValid() ? parsedBirthDay.format('YYYY-MM-DD') : '';
 };
 
-export const getSojuCapacityApiValue = (sojuCapacity: typeof SOJU_CAPACITY_RANGE[number]) => {
+export const getSojuCapacityApiValue = (sojuCapacity: (typeof SOJU_CAPACITY_RANGE)[number]['value']) => {
   switch (sojuCapacity) {
     case '못마셔요':
       return 0;
@@ -29,7 +29,9 @@ export const getSojuCapacityApiValue = (sojuCapacity: typeof SOJU_CAPACITY_RANGE
   }
 };
 
-export const getSojuCapacityFromApiValue = (sojuCapacity: number): typeof SOJU_CAPACITY_RANGE[number] | undefined => {
+export const getSojuCapacityFromApiValue = (
+  sojuCapacity: number,
+): (typeof SOJU_CAPACITY_RANGE)[number]['value'] | undefined => {
   switch (sojuCapacity) {
     case 0:
       return '못마셔요';

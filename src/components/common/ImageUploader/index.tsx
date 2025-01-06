@@ -141,7 +141,7 @@ const StyledInput = styled.input`
 `;
 
 const StyledPreview = styled.img`
-  border-radius: 6px;
+  border-radius: 26px;
   width: inherit;
   height: inherit;
   object-fit: cover;
@@ -184,6 +184,7 @@ const StyledEditButton = styled.button`
   border-top-left-radius: 25px;
   border-bottom-left-radius: 25px;
   cursor: pointer;
+  line-height: 0;
 
   ${editButtonStyle}
 
@@ -191,7 +192,7 @@ const StyledEditButton = styled.button`
     position: absolute;
     top: 10px;
     right: 0;
-    background-color: ${colors.gray600};
+    background-color: ${colors.gray400};
     width: 1px;
     height: 14px;
     content: '';

@@ -1,23 +1,21 @@
 import styled from '@emotion/styled';
 import { colors } from '@sopt-makers/colors';
+import { fonts } from '@sopt-makers/fonts';
+import { TextArea, TextField } from '@sopt-makers/ui';
+import { MouseEvent, ReactNode } from 'react';
 import { Controller, useFormContext } from 'react-hook-form';
 
 import ImageUploader from '@/components/common/ImageUploader';
-import Input from '@/components/common/Input';
+import useConfirm from '@/components/common/Modal/useConfirm';
 import Responsive from '@/components/common/Responsive';
-import MemberCountableInput from '@/components/members/upload/forms/CountableInput';
-import MemberCountableTextArea from '@/components/members/upload/forms/CountableTextArea';
+import Switch from '@/components/common/Switch';
+import Text from '@/components/common/Text';
 import FormHeader from '@/components/members/upload/forms/FormHeader';
 import FormItem from '@/components/members/upload/forms/FormItem';
 import { MemberFormSection as FormSection } from '@/components/members/upload/forms/FormSection';
 import { MemberUploadForm } from '@/components/members/upload/types';
 import IconCamera from '@/public/icons/icon-camera.svg';
 import { MOBILE_MEDIA_QUERY } from '@/styles/mediaQuery';
-import Switch from '@/components/common/Switch';
-import Text from '@/components/common/Text';
-import { fonts } from '@sopt-makers/fonts';
-import useConfirm from '@/components/common/Modal/useConfirm';
-import { ReactNode, MouseEvent } from 'react';
 
 export default function MemberBasicFormSection() {
   const {
@@ -65,7 +63,7 @@ export default function MemberBasicFormSection() {
     <FormSection>
       <FormHeader title='기본정보' />
       <StyledFormItems>
-        <FormItem title='프로필 사진' description={`가로 300px 세로 300px 권장합니다.\n예외 규격은 잘릴 수 있습니다.`}>
+        <FormItem title='프로필 사진' description={`예외 규격은 잘릴 수 있기 때문에,\n가로 300px 세로 300px 권장해요.`}>
           <Controller
             name='profileImage'
             control={control}
@@ -75,32 +73,38 @@ export default function MemberBasicFormSection() {
           />
         </FormItem>
         <FormItem title='이름' required errorMessage={errors.name?.message}>
-          <StyledInput disabled {...register('name')} error={errors.hasOwnProperty('name')} placeholder='이름 입력' />
+          <StyledTextField
+            disabled
+            {...register('name')}
+            isError={errors.hasOwnProperty('name')}
+            errorMessage={errors.name?.message}
+            placeholder='이름 입력'
+          />
         </FormItem>
         <FormItem title='생년월일' errorMessage={getBirthdayErrorMessage()}>
-          <StyledBirthdayInputWrapper>
-            <Input
+          <BirthdayInputWrapper>
+            <StyledTextField
               {...register('birthday.year')}
               placeholder='년도'
-              error={errors.birthday?.hasOwnProperty('year')}
+              isError={errors.birthday?.hasOwnProperty('year')}
               type='number'
               pattern='\d*'
             />
-            <Input
+            <StyledTextField
               {...register('birthday.month')}
               placeholder='월'
-              error={errors.birthday?.hasOwnProperty('month')}
+              isError={errors.birthday?.hasOwnProperty('month')}
               type='number'
               pattern='\d*'
             />
-            <Input
+            <StyledTextField
               {...register('birthday.day')}
               placeholder='일'
-              error={errors.birthday?.hasOwnProperty('day')}
+              isError={errors.birthday?.hasOwnProperty('day')}
               type='number'
               pattern='\d*'
             />
-          </StyledBirthdayInputWrapper>
+          </BirthdayInputWrapper>
         </FormItem>
         <FormItem title='연락처' errorMessage={errors.phone?.message} required className='maskable'>
           <StyledBlindSwitch>
@@ -110,33 +114,45 @@ export default function MemberBasicFormSection() {
               onClick={(e) => handleBlind(e, 'isPhoneBlind', openMaskingPhoneModal)}
             />
           </StyledBlindSwitch>
-          <StyledInput {...register('phone')} placeholder='010XXXXXXXX' />
+          <StyledTextField {...register('phone')} placeholder='010XXXXXXXX' />
         </FormItem>
         <FormItem title='이메일' required errorMessage={errors.email?.message} className='maskable'>
-          <StyledInput {...register('email')} type='email' placeholder='이메일 입력' />
+          <StyledTextField {...register('email')} type='email' placeholder='이메일 입력' />
         </FormItem>
         <FormItem
           title='활동 지역'
           description={`가까운 지하철역을 작성해주세요. \n활동 지역이 여러개일 경우 쉼표(,)로 구분해서 적어주세요.`}
         >
-          <StyledInput {...register('address')} placeholder='ex) 광나루역, 서울역, 홍대입구역' />
+          <StyledTextField
+            {...register('address')}
+            placeholder='ex) 광나루역, 서울역, 홍대입구역'
+            style={{ marginTop: '4px' }}
+          />
         </FormItem>
-        <FormItem title='학교'>
-          <StyledEducationInput {...register('university')} placeholder='학교 입력' />
-        </FormItem>
-        <FormItem title='전공'>
-          <StyledEducationInput {...register('major')} placeholder='전공 입력' />
-        </FormItem>
+        <Responsive only='desktop'>
+          <EducationInputWrapper>
+            <FormItem title='학교'>
+              <StyledEducationInput {...register('university')} placeholder='학교 입력' />
+            </FormItem>
+            <FormItem title='전공'>
+              <StyledEducationInput {...register('major')} placeholder='전공 입력' />
+            </FormItem>
+          </EducationInputWrapper>
+        </Responsive>
+        <Responsive only='mobile' asChild>
+          <FormItem title='학교 / 전공'>
+            <EducationInputWrapper>
+              <StyledEducationInput {...register('university')} placeholder='학교 입력' />
+              <StyledEducationInput {...register('major')} placeholder='전공 입력' />
+            </EducationInputWrapper>
+          </FormItem>
+        </Responsive>
         <FormItem title='나를 한 마디로 표현한다면?' description='아래 작성해주신 내용은 멤버 프로필 카드에 표시돼요!'>
           <Responsive only='desktop' asChild>
             <Controller
               name='introduction'
               render={({ field }) => (
-                <StyledCountableInput
-                  {...field}
-                  placeholder='ex) 프로 밤샘러, 데드리프트 잘하고 싶어요 등 '
-                  maxCount={15}
-                />
+                <StyledTextarea {...field} placeholder='ex) 프로 밤샘러, 데드리프트 잘하고 싶어요 등 ' maxLength={15} />
               )}
               control={control}
             />
@@ -145,10 +161,11 @@ export default function MemberBasicFormSection() {
             <Controller
               name='introduction'
               render={({ field }) => (
-                <StyledCountableTextarea
+                <StyledTextarea
                   placeholder='ex) 프로 밤샘러, 데드리프트 잘하고 싶어요 등 '
                   {...field}
-                  maxCount={15}
+                  maxLength={15}
+                  fixedHeight={78}
                 />
               )}
               control={control}
@@ -163,8 +180,8 @@ export default function MemberBasicFormSection() {
 const StyledFormItems = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 46px;
-  margin-top: 46px;
+  gap: 32px;
+  margin-top: 24px;
 
   .maskable {
     position: relative;
@@ -175,28 +192,28 @@ const StyledFormItems = styled.div`
   }
 
   @media ${MOBILE_MEDIA_QUERY} {
-    gap: 30px;
-    margin-top: 30px;
+    gap: 32px;
+    margin-top: 24px;
   }
 `;
 
 const StyledImageUploader = styled(ImageUploader)`
   margin-top: 18px;
   border-radius: 26px;
+  background-color: ${colors.gray800};
   width: 138px;
   height: 138px;
 
   @media ${MOBILE_MEDIA_QUERY} {
     margin-top: 16px;
     border-radius: 21.4783px;
-    background-color: ${colors.gray800};
     width: 114px;
     height: 114px;
   }
 `;
 
-const StyledInput = styled(Input)`
-  margin-top: 20px;
+const StyledTextField = styled(TextField)`
+  margin-top: 12px;
   width: 441px;
 
   @media ${MOBILE_MEDIA_QUERY} {
@@ -205,14 +222,27 @@ const StyledInput = styled(Input)`
   }
 `;
 
-const StyledEducationInput = styled(StyledInput)`
+const StyledEducationInput = styled(StyledTextField)`
   width: 260px;
+  @media ${MOBILE_MEDIA_QUERY} {
+    margin-top: 0;
+  }
 `;
 
-const StyledBirthdayInputWrapper = styled.div`
+const EducationInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 10px;
+
+  @media ${MOBILE_MEDIA_QUERY} {
+    gap: 10px;
+  }
+`;
+
+const BirthdayInputWrapper = styled.div`
   display: flex;
   gap: 12px;
-  margin-top: 18px;
   width: 441px;
 
   input {
@@ -221,20 +251,17 @@ const StyledBirthdayInputWrapper = styled.div`
 
   @media ${MOBILE_MEDIA_QUERY} {
     gap: 7px;
-    margin-top: 10px;
     width: 100%;
   }
 `;
 
-const StyledCountableInput = styled(MemberCountableInput)`
+const StyledTextarea = styled(TextArea)`
   margin-top: 16px;
   width: 444px;
-`;
 
-const StyledCountableTextarea = styled(MemberCountableTextArea)`
-  margin-top: 10px;
-  width: 100%;
-  height: 115px;
+  @media ${MOBILE_MEDIA_QUERY} {
+    width: 100%;
+  }
 `;
 
 const StyledBlindSwitch = styled.div`

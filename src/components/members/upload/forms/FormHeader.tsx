@@ -61,7 +61,7 @@ const StyledRequired = styled(Text)`
 const Description = styled(Text)`
   display: block;
   margin-top: 12px;
-  color: ${colors.gray400};
+  color: ${colors.gray300};
 
   @media ${MOBILE_MEDIA_QUERY} {
     margin-top: 8px;

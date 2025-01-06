@@ -45,7 +45,7 @@
     "@sopt-makers/colors": "^3.0.2",
     "@sopt-makers/fonts": "^1.0.0",
     "@sopt-makers/icons": "^1.0.5",
-    "@sopt-makers/ui": "^2.7.6",
+    "@sopt-makers/ui": "^2.8.5",
     "@tanstack/react-query": "^5.4.3",
     "@toss/emotion-utils": "^1.1.10",
     "@toss/error-boundary": "^1.4.6",

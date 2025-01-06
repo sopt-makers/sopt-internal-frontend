@@ -1,19 +1,18 @@
 import styled from '@emotion/styled';
 import { colors } from '@sopt-makers/colors';
-import { FieldError, useFieldArray, useFormContext } from 'react-hook-form';
+import { Controller, FieldError, useFieldArray, useFormContext } from 'react-hook-form';
 
-import Input from '@/components/common/Input';
-import Select from '@/components/common/Select';
+import BottomSheetSelect from '@/components/coffeechat/upload/CoffeechatForm/BottomSheetSelect';
+import Responsive from '@/components/common/Responsive';
 import AddableItem from '@/components/members/upload/AddableItem';
 import AddableWrapper from '@/components/members/upload/AddableWrapper';
 import { DEFAULT_ACTIVITY, PARTS, TEAMS } from '@/components/members/upload/constants';
 import FormHeader from '@/components/members/upload/forms/FormHeader';
 import { MemberFormSection as FormSection } from '@/components/members/upload/forms/FormSection';
-import SelectOptions from '@/components/members/upload/forms/SelectOptions';
+import Select from '@/components/members/upload/forms/Select';
 import { MemberUploadForm } from '@/components/members/upload/types';
 import { GENERATIONS, LAST_EDITABLE_GENERATION } from '@/constants/generation';
 import { MOBILE_MEDIA_QUERY } from '@/styles/mediaQuery';
-import { textStyles } from '@/styles/typography';
 
 interface MemberSoptActivityFormSectionProps {
   isEditable?: boolean;
@@ -28,7 +27,6 @@ export default function MemberSoptActivityFormSection({
 }: MemberSoptActivityFormSectionProps) {
   const {
     control,
-    register,
     formState: { errors },
     getValues,
   } = useFormContext<MemberUploadForm>();
@@ -84,58 +82,193 @@ export default function MemberSoptActivityFormSection({
               errorMessage={getActivityErrorMessage(errors.activities?.[index])}
             >
               <StyledSelectWrapper>
-                <StyledSelect
-                  {...register(`activities.${index}.generation`, {
-                    onChange: handleClickDisabled,
+                <Controller
+                  name={`activities.${index}.generation`}
+                  control={control}
+                  rules={{
                     validate: (value) => checkDuplicateGeneration(value, index),
-                  })}
-                  error={errors?.activities?.[index]?.hasOwnProperty('generation')}
-                  placeholder='활동기수'
-                >
-                  <SelectOptions options={FILTERED_GENERATIONS} />
-                </StyledSelect>
-                <StyledSelect
-                  {...register(`activities.${index}.part`, { onChange: handleClickDisabled })}
-                  error={errors?.activities?.[index]?.hasOwnProperty('part')}
-                  placeholder='파트'
-                >
-                  <SelectOptions options={PARTS} />
-                </StyledSelect>
-                <StyledSelect
-                  {...register(`activities.${index}.team`)}
-                  error={errors?.activities?.[index]?.hasOwnProperty('team')}
-                  placeholder='운팀/미팀 여부'
-                  className='team'
-                >
-                  <SelectOptions options={TEAMS} />
-                </StyledSelect>
+                  }}
+                  render={({ field }) => (
+                    <>
+                      <Responsive only='desktop'>
+                        <StyledSelect
+                          placeholder='활동기수'
+                          options={FILTERED_GENERATIONS}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            handleClickDisabled?.();
+                          }}
+                        />
+                      </Responsive>
+                      <Responsive only='mobile'>
+                        <BottomSheetSelect
+                          options={FILTERED_GENERATIONS}
+                          value={field.value}
+                          placeholder='활동기수'
+                          onChange={(value) => {
+                            field.onChange(value);
+                            handleClickDisabled?.();
+                          }}
+                        />
+                      </Responsive>
+                    </>
+                  )}
+                />
+                <Controller
+                  name={`activities.${index}.part`}
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Responsive only='desktop'>
+                        <StyledSelect
+                          placeholder='파트'
+                          options={PARTS}
+                          value={PARTS.find((option) => option.value === field.value)}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            handleClickDisabled?.();
+                          }}
+                        />
+                      </Responsive>
+                      <Responsive only='mobile'>
+                        <BottomSheetSelect
+                          options={PARTS}
+                          value={field.value}
+                          placeholder='파트'
+                          onChange={(value) => {
+                            field.onChange(value);
+                            handleClickDisabled?.();
+                          }}
+                        />
+                      </Responsive>
+                    </>
+                  )}
+                />
+                <Controller
+                  name={`activities.${index}.team`}
+                  control={control}
+                  render={({ field }) => (
+                    <>
+                      <Responsive only='desktop'>
+                        <StyledSelect
+                          placeholder='운팀/미팀 여부'
+                          options={TEAMS}
+                          onChange={(value) => {
+                            field.onChange(value);
+                            handleClickDisabled?.();
+                          }}
+                        />
+                      </Responsive>
+                      <Responsive only='mobile'>
+                        <BottomSheetSelect
+                          options={TEAMS}
+                          value={field.value}
+                          placeholder='운팀/미팀 여부'
+                          onChange={(value) => {
+                            field.onChange(value);
+                            handleClickDisabled?.();
+                          }}
+                        />
+                      </Responsive>
+                    </>
+                  )}
+                />
               </StyledSelectWrapper>
             </AddableItem>
           ) : (
-            <FixedActivity key={field.id}>
-              <StyledInput
-                disabled
-                {...register(`activities.${index}.generation`)}
-                error={errors?.activities?.[index]?.hasOwnProperty('generation')}
-                placeholder='활동기수'
-                width='202.66px'
+            <StyledSelectWrapper key={field.id}>
+              <Controller
+                name={`activities.${index}.generation`}
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Responsive only='desktop'>
+                      <StyledSelect
+                        disabled
+                        value={
+                          FILTERED_GENERATIONS.find((option) => option.value === field.value) || {
+                            label: field.value,
+                            value: field.value,
+                          }
+                        }
+                        placeholder='활동기수'
+                        options={FILTERED_GENERATIONS}
+                        className='generation'
+                      />
+                    </Responsive>
+                    <Responsive only='mobile'>
+                      <BottomSheetSelect
+                        disabled
+                        options={FILTERED_GENERATIONS}
+                        value={field.value}
+                        placeholder='활동기수'
+                        onChange={(value) => {
+                          field.onChange(value);
+                          handleClickDisabled?.();
+                        }}
+                      />
+                    </Responsive>
+                  </>
+                )}
               />
-              <StyledInput
-                disabled
-                {...register(`activities.${index}.part`)}
-                error={errors?.activities?.[index]?.hasOwnProperty('part')}
-                placeholder='파트'
-                width='202.66px'
+              <Controller
+                name={`activities.${index}.part`}
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Responsive only='desktop'>
+                      <StyledSelect
+                        disabled
+                        value={PARTS.find((option) => option.value === field.value)}
+                        placeholder='파트'
+                        options={PARTS}
+                        className='part'
+                      />
+                    </Responsive>
+                    <Responsive only='mobile'>
+                      <BottomSheetSelect
+                        disabled
+                        options={PARTS}
+                        value={field.value}
+                        placeholder='파트'
+                        onChange={(value) => {
+                          field.onChange(value);
+                          handleClickDisabled?.();
+                        }}
+                      />
+                    </Responsive>
+                  </>
+                )}
               />
-              <StyledSelect
-                {...register(`activities.${index}.team`)}
-                error={errors?.activities?.[index]?.hasOwnProperty('team')}
-                placeholder='운팀/미팀 여부'
-                className='team'
-              >
-                <SelectOptions options={TEAMS} />
-              </StyledSelect>
-            </FixedActivity>
+              <Controller
+                name={`activities.${index}.team`}
+                control={control}
+                render={({ field }) => (
+                  <>
+                    <Responsive only='desktop'>
+                      <StyledSelect
+                        value={TEAMS.find((option) => option.value === field.value)}
+                        placeholder='운팀/미팀 여부'
+                        className='team'
+                        options={TEAMS}
+                        onChange={(value) => field.onChange(value)}
+                      />
+                    </Responsive>
+                    <Responsive only='mobile'>
+                      <BottomSheetSelect
+                        options={TEAMS}
+                        value={field.value}
+                        placeholder='운팀/미팀 여부'
+                        onChange={(value) => {
+                          field.onChange(value);
+                          handleClickDisabled?.();
+                        }}
+                      />
+                    </Responsive>
+                  </>
+                )}
+              />
+            </StyledSelectWrapper>
           ),
         )}
       </StyledAddableWrapper>
@@ -144,10 +277,14 @@ export default function MemberSoptActivityFormSection({
 }
 
 const FILTERED_GENERATIONS = GENERATIONS.filter((generation) => parseInt(generation) <= LAST_EDITABLE_GENERATION).map(
-  (generation) => generation + '기',
+  (generation) => ({
+    value: generation + '기',
+    label: generation + '기',
+  }),
 );
 
 const StyledFormSection = styled(FormSection)`
+  background-color: ${colors.gray900};
   @media ${MOBILE_MEDIA_QUERY} {
     padding-bottom: 17px;
   }
@@ -157,58 +294,38 @@ const StyledAddableWrapper = styled(AddableWrapper)<{ isCheckPage: boolean }>`
   margin-top: ${({ isCheckPage }) => !isCheckPage && '32px'};
   width: 683px;
   @media ${MOBILE_MEDIA_QUERY} {
-    margin-top: ${({ isCheckPage }) => !isCheckPage && '30px'};
+    margin-top: ${({ isCheckPage }) => !isCheckPage && '32px'};
     width: 100%;
   }
 `;
 
 const StyledSelectWrapper = styled.div`
-  display: grid;
-  position: relative;
-  grid-template-rows: 1fr;
-  grid-template-columns: 1fr 1fr 1fr;
+  display: flex;
   gap: 12px;
-  align-items: center;
   width: 100%;
+
   @media ${MOBILE_MEDIA_QUERY} {
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-areas:
+      'generation part'
+      'team team';
     grid-template-columns: 1fr 1fr;
-    row-gap: 11px;
-    column-gap: 9px;
-    height: 107px;
 
-    .team {
-      grid-column: span 2;
+    & > div {
+      width: 100%;
+    }
+
+    & > div:last-child {
+      grid-area: team;
     }
   }
 `;
 
 const StyledSelect = styled(Select)`
-  border-radius: 14px;
-  padding: 16px 34px 16px 20px;
-  width: 100%;
-  color: ${colors.gray10};
+  width: 203px;
 
-  ${textStyles.SUIT_16_M};
-
-  @media ${MOBILE_MEDIA_QUERY} {
-    border-radius: 12px;
-    background-color: ${colors.gray800};
-    width: 100%;
-  }
-`;
-
-const FixedActivity = styled(StyledSelectWrapper)`
-  width: 632px;
-
-  @media ${MOBILE_MEDIA_QUERY} {
-    width: 100%;
-  }
-`;
-
-const StyledInput = styled(Input)`
-  & > input {
+  & button,
+  & div {
     width: 100%;
   }
 `;

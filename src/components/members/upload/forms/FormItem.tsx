@@ -45,26 +45,28 @@ export default function MemberFormItem({
 const StyledTitle = styled(Text)`
   display: flex;
 
-  ${textStyles.SUIT_18_SB}
+  ${textStyles.SUIT_16_SB}
+
+  color: ${colors.gray10};
 
   @media ${MOBILE_MEDIA_QUERY} {
-    ${textStyles.SUIT_15_SB}
+    color: ${colors.white};
   }
 `;
 
 const StyledRequired = styled(Text)`
-  margin: 0 0 0 4px;
+  margin: -6px 0 0 1px;
   color: ${colors.secondary};
   ${textStyles.SUIT_16_M};
 `;
 
 const StyledDescription = styled(Text)`
   display: block;
-  margin-top: 10px;
-  color: ${colors.gray400};
+  margin-top: 8px;
+  color: ${colors.gray300};
 
   @media ${MOBILE_MEDIA_QUERY} {
-    margin-top: 8px;
+    margin-top: 10px;
     line-height: 150%;
     white-space: pre-line;
 

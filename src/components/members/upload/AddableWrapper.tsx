@@ -62,15 +62,22 @@ const MobileAddButton = styled.button`
 
   @media ${MOBILE_MEDIA_QUERY} {
     display: flex;
-    gap: 11px;
+    gap: 4px;
     align-items: center;
     justify-content: center;
     margin-top: 20px;
     border: 1px solid ${colors.gray50};
     border-radius: 12px;
-    padding: 16px 0;
+    padding: 13px 0;
     width: 100%;
     color: ${colors.gray50};
+
+    ${textStyles.SUIT_14_SB}
+
+    & svg {
+      width: 12px;
+      height: 12px;
+    }
   }
 `;
 

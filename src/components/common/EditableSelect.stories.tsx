@@ -1,6 +1,5 @@
 import { Meta, StoryFn } from '@storybook/react';
 
-import { LINK_TITLES } from '@/components/members/upload/constants';
 import MemberSelectOptions from '@/components/members/upload/forms/SelectOptions';
 
 import EditableSelect from './EditableSelect';
@@ -11,7 +10,7 @@ export default {
 
 const Template: StoryFn<typeof EditableSelect> = (args) => (
   <EditableSelect {...args}>
-    <MemberSelectOptions options={LINK_TITLES} />
+    <MemberSelectOptions options={['option1', 'option2', 'option3']} />
   </EditableSelect>
 );
 
